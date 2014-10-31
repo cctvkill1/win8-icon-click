@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head> 
+  <meta  charset="UTF-8">
+  <title>块状点击试验</title>
+  <style type="text/css">
+  .content{
+    position: absolute;
+    box-sizing: border-box;
+    -webkit-perspective: 320;
+  }
+  #test{
+    width:300px;
+    height:200px;
+    border:1px #ccc solid;
+    background: #78DAF3;
+    -webkit-transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.2, 0.7, 0.1, 1.1);
+    /*    -moz-transition: all 0.5s ease-in;
+    -webkit-transition: all 0.5s ease-in;
+    -o-transition: all 0.5s ease-in;
+    transition: all 0.5s ease-in;*/
+  }
+  .center{
+    -webkit-animation: tocenter .5s;   
+  }
+  .left{
+    -webkit-transform-origin: center right;
+    -webkit-animation: toleft .5s;   
+  /*transform: rotateY(20deg);
+  -webkit-transform:  translateZ(100px) rotateY(70deg) scale3d(1,1,0.1);
+  -webkit-transform-origin:100% 0; 
+  -moz-transform: rotateY(20deg);*/
+}
+.right{
+  -webkit-transform-origin: center left;
+  -webkit-animation: toright .5s;  
+}
+.top{
+  -webkit-transform-origin: center bottom;
+  -webkit-animation: totop .5s;  
+}
+.down{
+  -webkit-transform-origin: center top;
+  -webkit-animation: todown .5s;  
+}
+
+
+@-webkit-keyframes tocenter  
+{
+  0% {
+    -webkit-transform: scale(1); 
+  }
+  50% {
+    -webkit-transform: scale(0.9); 
+  }
+  100% {
+    -webkit-transform: scale(1); 
+  }
+}
+
+@-webkit-keyframes toleft  
+{
+  0% {
+    -webkit-transform: rotateY(0deg); 
+  }
+  50% {
+    -webkit-transform: rotateY(-10deg); 
+  }
+  100% {
+    -webkit-transform: rotateY(0deg); 
+  }
+}
+
+@-webkit-keyframes toright  
+{
+  0% {
+    -webkit-transform: rotateY(0deg); 
+  }
+  50% {
+    -webkit-transform: rotateY(10deg); 
+  }
+  100% {
+    -webkit-transform: rotateY(0deg); 
+  }
+}
+@-webkit-keyframes totop  
+{
+  0% {
+    -webkit-transform: rotateX(0deg); 
+  }
+  50% {
+    -webkit-transform: rotateX(10deg); 
+  }
+  100% {
+    -webkit-transform: rotateX(0deg); 
+  }
+}
+@-webkit-keyframes todown 
+{
+  0% {
+    -webkit-transform: rotateX(0deg); 
+  }
+  50% {
+    -webkit-transform: rotateX(-10deg); 
+  }
+  100% {
+    -webkit-transform: rotateX(0deg); 
+  }
+}
+
+</style>
+</head>
+<body> 
+  <div class="content">
+    <div id="test">
+    </div> 
+  </div> 
+</div>
+<script type="text/javascript">
+function hasClass(obj, cls) {  
+  return obj.className.match(new RegExp('(\\s|^)' + cls + '(\\s|$)'));  
+}   
+function addClass(obj, cls) {  
+  if (!this.hasClass(obj, cls)) obj.className += " " + cls;  
+}  
+
+function removeClass(obj, cls) {  
+  if (hasClass(obj, cls)) {  
+    var reg = new RegExp('(\\s|^)' + cls + '(\\s|$)');  
+    obj.className = obj.className.replace(reg, ' ');  
+  }  
+}  
+Date.prototype.format = function(fmt)   
+{ 
+  var o = {   
+    "M+" : this.getMonth()+1,                 //月份   
+    "d+" : this.getDate(),                    //日   
+    "h+" : this.getHours(),                   //小时   
+    "m+" : this.getMinutes(),                 //分   
+    "s+" : this.getSeconds(),                 //秒   
+    "q+" : Math.floor((this.getMonth()+3)/3), //季度   
+    "S"  : this.getMilliseconds()             //毫秒   
+  };   
+  if(/(y+)/.test(fmt))
+    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
+  for(var k in o)
+    if(new RegExp("("+ k +")").test(fmt))
+      fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
+    return fmt;
+  }  
+  document.getElementById('test').onclick=function(ev){  
+    var time = new Date().format("hh:mm:ss");
+    var oEvent=ev||event;
+    var x=oEvent.clientX-this.offsetLeft;
+    var y=oEvent.clientY-this.offsetTop;
+    var w=this.offsetWidth;
+    var h=this.offsetHeight;
+     // console.log(x+"  "+y+"  "+w + "   "+ h)
+     if(x >= w/4 && x <= w/4*3&& y >= h/4 && y <= h/4*3){
+      addClass(this,"center");
+      setTimeout(function(){
+        removeClass(document.getElementById('test'),"center")
+      },500);
+      console.log(time+"中间")
+    }
+    else{
+      var y1=h/w*x;
+      var y2=h-y1;
+      if(y1<=y&&y<=y2){
+        addClass(this,"left");
+        setTimeout(function(){
+          removeClass(document.getElementById('test'),"left")
+        },500);
+      }
+      else if(y1>=y&&y>=y2){
+        addClass(this,"right");
+        setTimeout(function(){
+          removeClass(document.getElementById('test'),"right")
+        },500);
+      }
+      else if(y<=y2&&y<=y1){
+        addClass(this,"top");
+        setTimeout(function(){
+          removeClass(document.getElementById('test'),"top")
+        },500);
+      }
+      else if(y>=y2&&y>=y1){
+        addClass(this,"down");
+        setTimeout(function(){
+          removeClass(document.getElementById('test'),"down")
+        },500);
+      }
+    }
+  }
+  </script>
+</body>
+</html>
